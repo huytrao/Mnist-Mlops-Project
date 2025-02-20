@@ -4,10 +4,11 @@ import pandas as pd
 from clearml import Dataset, Task
 from sklearn.datasets import fetch_openml
 
-import global_config
+PROJECT_NAME = 'Minst-Mlops'
+PIPELINE_NAME = 'Minst-Pipeline'
 
 task = Task.init(
-    project_name=global_config.PROJECT_NAME,
+    project_name=PROJECT_NAME,
     task_name='preprocess data',
     task_type='data_processing',
     reuse_last_task_id=False
@@ -36,7 +37,7 @@ mnist_df.to_csv(preprocessed_data_folder / 'mnist.csv', index=False)
 
 # Create a new version of the dataset, which is cleaned up
 new_dataset = Dataset.create(
-    dataset_project=global_config.PROJECT_NAME,
+    dataset_project=PROJECT_NAME,
     dataset_name='preprocessed_mnist_dataset'
 )
 new_dataset.add_files(preprocessed_data_folder / 'mnist.csv')

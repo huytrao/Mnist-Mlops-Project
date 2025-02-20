@@ -2,6 +2,8 @@ from platform import node
 from clearml import Task
 from clearml.automation import PipelineController
 
+Task.force_store_standalone_script()
+
 PROJECT_NAME = 'Minst-Mlops'
 PIPELINE_NAME = 'Minst-Pipeline'
 
@@ -58,13 +60,17 @@ pipe.add_parameter('query_date', '2025-02-19')
 
 pipe.add_step(
     name='get_data',
-    base_task_id='5670d6c6ba1b46f19e3df4b584936cf6',  # Using the specific task ID
-    parameter_override={'General/query_date': '${pipeline.query_date}'}
+    base_task_project= PROJECT_NAME,
+    base_task_name='get data', 
+    # base_task_id='645c3cd8b604408e8e22f6e8c876e429' ,  #Using the specific task ID
+    parameter_override={'General/query_date':'${pipeline.query_date}'}
 )
 pipe.add_step(
     name='preprocess_data',
     parents=['get_data'],  # Corrected parent step name
-    base_task_id='56c2cb38b2924b4aa47469b6d54830df',  # Using the specific task ID
+    base_task_project=PROJECT_NAME,
+    base_task_name='preprocess data',  # Using the specific task ID
+    # base_task_id='56c2cb38b2924b4aa47469b6d54830df',  # Using the specific task ID
     pre_execute_callback=pre_execute_callback_example,
     post_execute_callback=post_execute_callback_example
 )
@@ -81,7 +87,8 @@ for i, random_state in enumerate(pipe.get_parameters()['training_seeds']):
         name=node_name,
         parents=['preprocess_data'],
         base_task_project=PROJECT_NAME,
-        base_task_id='f0cbe20e15624ed6a5428d2d11e353fb',
+        base_task_name='model training',
+        # base_task_id='f0cbe20e15624ed6a5428d2d11e353fb',
         parameter_override={'General/num_boost_round': 250,
                             'General/test_size': 0.5,
                             'General/random_state': random_state}

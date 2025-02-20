@@ -10,10 +10,11 @@ import seaborn as sns
 
 # Connecting ClearML with the current process,
 # from here on everything is logged automatically
-import global_config
+PROJECT_NAME = 'Minst-Mlops'
+PIPELINE_NAME = 'Minst-Pipeline'
 
 task = Task.init(
-    project_name=global_config.PROJECT_NAME,
+    project_name=PROJECT_NAME,
     task_name='model training',
     output_uri=True
 )
@@ -35,7 +36,7 @@ task.connect(training_args)
 # Load our Dataset
 local_path = Dataset.get(
     dataset_name='preprocessed_mnist_dataset',
-    dataset_project=global_config.PROJECT_NAME
+    dataset_project=PROJECT_NAME
 ).get_local_copy()
 local_path = Path(local_path)
 # local_path = Path('data/preprocessed_data')
@@ -80,10 +81,10 @@ plt.ylabel('Feature')
 plt.show()
 
 # Vẽ phân phối các giá trị pixel
-pixel_values = X.values.flatten()
+sampled_pixel_values = X.sample(frac=0.1, random_state=42).values.flatten()
 plt.figure(figsize=(10, 6))
-sns.histplot(pixel_values, bins=50, kde=True)
-plt.title('Pixel Value Distribution')
+sns.histplot(sampled_pixel_values, bins=50, kde=True)
+plt.title('Pixel Value Distribution (Sampled)')
 plt.xlabel('Pixel Value')
 plt.ylabel('Frequency')
 plt.show()

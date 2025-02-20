@@ -1,12 +1,12 @@
 from clearml import Task, Dataset
-
-import  global_config
 from sklearn.datasets import fetch_openml
 import pandas as pd
 from pathlib import Path
+PROJECT_NAME = 'Minst-Mlops'
+PIPELINE_NAME = 'Minst-Pipeline'
 
 task = Task.init(
-    project_name=global_config.PROJECT_NAME,
+    project_name=PROJECT_NAME,
     task_name='get data',
     task_type='data_processing',
     reuse_last_task_id=False
@@ -35,7 +35,7 @@ print(mnist_df.head())
 # Create a ClearML dataset
 dataset = Dataset.create(
     dataset_name='raw_mnist_dataset',
-    dataset_project=global_config.PROJECT_NAME
+    dataset_project=PROJECT_NAME
 )
 # Add the local files we downloaded earlier
 dataset.add_files(data_path)
